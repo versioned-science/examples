@@ -1,1 +1,1 @@
-# examples
+# Example experiment configurations

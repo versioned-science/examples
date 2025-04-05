@@ -1,0 +1,88 @@
+experiments:
+  - name: "Example PCR run"
+    steps:
+      - name: "Create PCR mix"
+        func_name: mix_all
+        inputs:
+          - name: "template"
+            stock_name: dna_sequence
+            sequence: |
+              ATGCGTACGTAGCTAGCTAGCTAGCTAGCGTACGTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGC  
+              AGCTAGCTAGCGTACGTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTA  
+              GCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGC  
+              TAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTA  
+              GCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGC  
+              TAA
+            target_concentration:
+              amount: 100
+              unit: ng
+            volume:
+              amount: 1
+              unit: µL
+          - name: "forward primer"
+            stock_name: dna_sequence
+            sequence: ATGCGTACGTAGCTAGCTAG
+            target_concentration:
+              amount: 0.5
+              unit: µL
+            volume:
+              amount: 2.5
+              unit: µL
+          - name: "reverse primer"
+            stock_name: dna_sequence
+            sequence: TTAGCTAGCTAGCTAGCTAG
+            target_concentration:
+              amount: 0.5
+              unit: µL
+            volume:
+              amount: 2.5
+              unit: µL
+          - name: "dNTP mix"
+            stock_name: d_ntp
+            target_concentration:
+              amount: 200
+              unit: µL
+            volume:
+              amount: 1
+              unit: µL
+          - name: "10X PCR Buffer"
+            stock_name: pcr_buffer
+            target_concentration:
+              amount: 1
+              unit: X
+            volume:
+              amount: 5
+              unit: µL
+          - name: "Taq DNA polymerase"
+            stock_name: polymerase
+            target_concentration:
+              amount: 1.25
+              unit: µL
+            volume:
+              amount: 0.25
+              unit: µL
+          - name: "Sterile water"
+            stock_name: sterile_water
+            volume:
+              amount: 50
+              unit: µL
+        outputs:
+          - name: "PCR mix"
+            step_name: "pcr_mix"
+      - name: "PCR cycling"
+        func_name: cycle_pcr
+        inputs:
+          - name: "amplified DNA"
+            step_name: pcr_mix
+        outputs:
+          - name: "amplified DNA"
+            step_name: amplified_DNA
+      - name: "store amplified DNA"
+        func_name: add_to_stock
+        inputs:
+          - name: "amplified DNA"
+            step_name: pcr_mix
+        conditions:
+          Temp:
+            value: 24
+            unit: C
